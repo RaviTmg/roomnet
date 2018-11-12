@@ -8,16 +8,16 @@ import cv2
 import shutil
 import time
 import argparse
-from get_res import get_im
+# from get_res import get_im
 batch_size=20
 s_in=320
 s_out=40
 max_epoch=225
 l_list=[0,8,14,20,24,28,34,38,42,44,46, 48]
 
-datapath='/home/mcg/Data/LSUN/data'
-datadir='/home/mcg/Data/LSUN/data/training_data'
-val_datadir='/home/mcg/Data/LSUN/data/validation_data'
+datapath='../LSUN/'
+datadir='../LSUN/training_data'
+val_datadir='../LSUN/validation_data'
 
     
 def train(args):
@@ -49,7 +49,7 @@ def train(args):
   sess.run(tf.local_variables_initializer())
 
   if args.train==0:
-    print 'train from scratch'
+    print( 'train from scratch')
     start_step=0
     # start_epoch=0
   else:
@@ -82,7 +82,7 @@ def train(args):
         c_out=np.argmax(pred_class, axis=1)
         c_gt=np.argmax(label_gt, axis=1)
         acc=np.mean(np.array(np.equal(c_out, c_gt), np.float32)) 
-        print 'accuracy',acc
+        print('accuracy',acc)
         fout.write('%s %s\n'%(i, acc))
       if np.mod(global_step, 500)==0:
         net.save_model(sess, model_dir, global_step)
@@ -118,13 +118,13 @@ def test(args):
       net=RcnnNet()
     net.build_model()
   start_step=net.restore_model(sess, model_dir)
-  print 'restored'
+  print ('restored')
   fout=open(os.path.join(outdir, 'acc.txt'), 'w')
   start_time=time.time()
   fetchworker=BatchFetcher(val_datadir,False, False)
   fetchworker.start()
   total_step=fetchworker.get_max_step()
-  print 'total steps', total_step
+  print ('total steps', total_step)
   for i in range(total_step):
     im_in,lay_gt, label_gt,names=fetchworker.fetch()
     net.set_feed(im_in, lay_gt, label_gt,i)
@@ -136,8 +136,8 @@ def test(args):
     for j in range(batch_size):
       img = im_in[j]
       # print class_label, label2
-      outim = get_im(img, pred_lay[j], c_out, str(j))
-      outim2 = get_im(img, lay_gt[j], c_gt, str(j))
+      # outim = get_im(img, pred_lay[j], c_out, str(j))
+      # outim2 = get_im(img, lay_gt[j], c_gt, str(j))
       outpath=os.path.join(outdir, str(i))
       if not os.path.exists(outpath):
         os.makedirs(outpath)

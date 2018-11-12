@@ -1,16 +1,16 @@
 import os
 import numpy as np
 import zlib
-import cPickle as pickle
+import _pickle as pickle
 import cv2
 import scipy.io as sio
 import scipy.misc as smc
 
-im_path='/home/mcg/Data/LSUN/data/images'
-mat='/home/mcg/Data/LSUN/data/training.mat'
-#test_mat='/home/mcg/Data/LSUN/data/validation.mat'
-outpath='/home/mcg/Data/LSUN/data/training_data'
-#outpath='/home/mcg/Data/LSUN/data/validation_data'
+im_path='../LSUN/images'
+#mat='../LSUN/training.mat'
+test_mat='../LSUN/validation.mat'
+#outpath='../LSUN/training_data'
+outpath='../LSUN/validation_data'
 s=320
 out_s=40
 l_list=[0,8,14,20,24,28,34,38,42,44,46]
@@ -36,16 +36,16 @@ def guassian_2d(x_mean, y_mean, dev=5.0):
   z=np.exp(-((x-x_mean)**2+ (y-y_mean)**2)/(2.0*dev**2))
   return z
 
-data=sio.loadmat(mat)
-#data=data['validation'][0]
-data=data['training'][0]
+data=sio.loadmat(test_mat)
+data=data['validation'][0]
+#data=data['training'][0]
 j=0
 for item in data:
   j=j+1
 #  if j==5:
 #    break 
   if j%100==0:
-    print j
+    print(j)
   name=item[0][0]
   ltype=item[2][0][0]
   pts=item[3]

@@ -7,7 +7,7 @@ import os
 import time
 import socket
 import threading
-import Queue
+import queue as Queue
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import scipy.io
 import helper
@@ -21,8 +21,8 @@ max_epoch=225
 # 0:499, 1:137, 2:2, 3:17, 4:744, 5:1352, 6:54, 7:2, 8:1, 9:160, 10:32
 #balance_list=[1, 3, 200, 20, 1, 1, 8, 200, 200, 3, 15]
 balance_list=[1,1,1,1,1,1,1,1,1,1,1,1]
-train_mat='/home/mcg/Data/LSUN/data/training.mat'
-val_mat='/home/mcg/Data/LSUN/data/validation.mat'
+train_mat='../LSUN/training.mat'
+val_mat='../LSUN/validation.mat'
 
 class BatchFetcher(threading.Thread):
   def __init__(self, datapath,istrain, repeat):
@@ -58,7 +58,7 @@ class BatchFetcher(threading.Thread):
         names.append(name)
         names.append(name+'2')
     names=sorted(names)
-    print 'total train  number', len(names)
+    print ('total train  number', len(names))
     names=np.random.permutation(names)
     return names
   def get_val_names(self):
@@ -68,7 +68,7 @@ class BatchFetcher(threading.Thread):
       name=item[0][0]
       names.append(name)
     names=sorted(names)
-    print 'val number', len(names)
+    print( 'val number', len(names))
 #    names=np.random.permutation(names)
     return names
   def get_max_step(self):
@@ -104,7 +104,7 @@ class BatchFetcher(threading.Thread):
       self.shutdown()
     while self.epoch<max_epoch+1 and not self.stopped:
       self.queue.put(self.work())
-      print 'push'
+      print( 'push')
       self.cur+=self.batch_size
 
   def fetch(self):
@@ -122,6 +122,6 @@ if __name__=='__main__':
 #  time.sleep(10)
   for i in range(5):
     a,b,c,d=fetchworker.fetch()
-    print a.shape, b.shape, c,d
+    print( a.shape, b.shape, c,d)
   fetchworker.shutdown()
 
